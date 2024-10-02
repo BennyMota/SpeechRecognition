@@ -2,3 +2,7 @@
 How are you
 What time is it
 Wake up
+Stop talking
+Stop listening
+Show commands
+Hide commands

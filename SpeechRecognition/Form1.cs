@@ -79,7 +79,26 @@ namespace SpeechRecognition
             
             if (speech == "Stop listening")
             {
+                Sarah.SpeakAsync("If you need me just ask");
+                _recognizer.RecognizeAsyncCancel();
+                startlistening.RecognizeAsync(RecognizeMode.Multiple);
+            }
 
+            if (speech == "Show commands")
+            {
+                string[] commands = (File.ReadAllLines(@"DefaultCommands.txt"));
+                LstCommands.Items.Clear();
+                LstCommands.SelectionMode = SelectionMode.None;
+                LstCommands.Visible = true;
+                foreach (string command in commands)
+                {
+                    LstCommands.Items.Add(command);
+                }
+            }
+
+            if (speech == "Hide commands")
+            {
+                LstCommands.Visible = false;
             }
         }
 
