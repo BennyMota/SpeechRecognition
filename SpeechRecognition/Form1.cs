@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
+using System.IO;
 
 namespace SpeechRecognition
 {
@@ -29,6 +30,8 @@ namespace SpeechRecognition
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            _recognizer.SetInputToDefaultAudioDevice();
+            _recognizer.LoadGrammarAsync(new Grammar(new GrammarBuilder(new Choices(File.ReadAllLines(@"...Location...")))));
 
         }
     }
