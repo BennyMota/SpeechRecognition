@@ -28,7 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.LstCommands = new System.Windows.Forms.ListBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // LstCommands
@@ -40,6 +42,12 @@
             this.LstCommands.Name = "LstCommands";
             this.LstCommands.Size = new System.Drawing.Size(612, 479);
             this.LstCommands.TabIndex = 0;
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Form1
             // 
@@ -58,6 +66,7 @@
         #endregion
 
         private System.Windows.Forms.ListBox LstCommands;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

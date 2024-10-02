@@ -17,9 +17,10 @@ namespace SpeechRecognition
     {
         SpeechRecognitionEngine _recognizer = new SpeechRecognitionEngine();
         SpeechSynthesizer Sarah = new SpeechSynthesizer();
-        SpeechRecognitionEngine startListening = new SpeechRecognitionEngine();
+        SpeechRecognitionEngine startlistening = new SpeechRecognitionEngine();
         Random rnd = new Random();
         int RecTimeOut = 0;
+        DateTime TimeNow = DateTime.Now;
 
 
 
@@ -31,8 +32,86 @@ namespace SpeechRecognition
         private void Form1_Load(object sender, EventArgs e)
         {
             _recognizer.SetInputToDefaultAudioDevice();
-            _recognizer.LoadGrammarAsync(new Grammar(new GrammarBuilder(new Choices(File.ReadAllLines(@"...Location...")))));
+            _recognizer.LoadGrammarAsync(new Grammar(new GrammarBuilder(new Choices(File.ReadAllLines(@"DefaultCommands.txt")))));
+            _recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(Default_SpeechRecognized);
+            _recognizer.SpeechDetected += new EventHandler<SpeechDetectedEventArgs>(_recognizer_SpeechRecognized);
+            _recognizer.RecognizeAsync(RecognizeMode.Multiple);
 
+            startlistening.SetInputToDefaultAudioDevice();
+            startlistening.LoadGrammarAsync(new Grammar(new GrammarBuilder(new Choices(File.ReadAllLines(@"DefaultCommands.txt")))));
+            startlistening.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(startlistening_SpeechRecognized);
+
+        }
+
+        private void Default_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        {
+            int ranNum;
+            string speech = e.Result.Text;
+
+            if (speech == "Hello")
+            {
+                Sarah.SpeakAsync("Hello I am here");
+            }
+
+            if (speech == "How are you")
+            {
+                Sarah.SpeakAsync("I am working normally");
+            }
+
+            if (speech == "What time is it")
+            {
+                Sarah.SpeakAsync(DateTime.Now.ToString("h mm tt"));
+            }
+
+            if (speech == "Stop talking")
+            {
+                Sarah.SpeakAsyncCancelAll();
+                ranNum = rnd.Next(1, 2);
+                if (ranNum == 1)
+                {
+                    Sarah.SpeakAsync("Yes sir");
+                }
+                if (ranNum == 2)
+                {
+                    Sarah.SpeakAsync("I am sorry i will be quiet");
+                }
+            }
+            
+            if (speech == "Stop listening")
+            {
+
+            }
+        }
+
+        private void _recognizer_SpeechRecognized(object sender, SpeechDetectedEventArgs e)
+        {
+            RecTimeOut = 0;
+        }
+
+        private void startlistening_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        {
+            string speech = e.Result.Text;
+
+            if (speech == "wake up")
+            {
+                startlistening.RecognizeAsyncCancel();
+                Sarah.SpeakAsync("Yes, I am here");
+                _recognizer.RecognizeAsync(RecognizeMode.Multiple);
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (RecTimeOut == 10)
+            {
+                _recognizer.RecognizeAsyncCancel();
+            }
+            else if (RecTimeOut == 11)
+            {
+                timer1.Stop();
+                startlistening.RecognizeAsync(RecognizeMode.Multiple);
+                RecTimeOut = 0;
+            }
         }
     }
 }
