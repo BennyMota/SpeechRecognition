@@ -111,7 +111,7 @@ namespace SpeechRecognition
         {
             string speech = e.Result.Text;
 
-            if (speech == "wake up")
+            if (speech == "Wake up")
             {
                 startlistening.RecognizeAsyncCancel();
                 Sarah.SpeakAsync("Yes, I am here");
